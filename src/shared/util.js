@@ -100,3 +100,5 @@ export function remove (arr, item) {
     }
   }
 }
+
+export function identity = (_) => _
