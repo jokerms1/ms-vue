@@ -3,5 +3,8 @@ export * from './options'
 export * from './env'
 export * from './error'
 export * from './debug'
+export * from './lang'
+export * from './next-tick'
+export * from './props'
 
 export { defineReactive } from '../observer/index'

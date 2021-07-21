@@ -41,7 +41,13 @@ function _toString(val) {
 const camlizeRE = /-(\w)/g
 export const camelize = cached((str) => {
   return str.replace(camlizeRE, (_, c) => c ? c.toUpperCase(): '')
-}) 
+})
+
+
+const hyphenateRE = /\B([A-Z])/g
+export const hyphenate = cached((str) => {
+  return str.replace(hyphenateRE, '-$1').toLowerCase()
+})
 
 
 export function isPlainObject (val) {
@@ -99,4 +105,39 @@ export function remove (arr, item) {
       return arr.splice(arr, index)
     }
   }
+}
+
+export function isRegExp (v) {
+  return _toString.call(v) === '[object RegEXP]'
+}
+
+export function isValidArrayIndex (val) {
+  const n = parseFloat(String(val))
+  return n >= 0 && Math.floor(n) === n && isFinite(val)
+}
+
+
+export const isReservedAttribute = makeMap('key,ref,slot,slot-scope,is')
+
+export function makeMap (
+  str,
+  expectsLowerCase
+ ) {
+  const map = Object.create(null)
+  const list = str.split(',')
+  for (let i = 0; i < list.length; i++) {
+    map[list[i]] = true
+  }
+  return expectsLowerCase 
+    ? val => map[val.toLowerCase()]
+    : val => map[val]
+}
+
+
+export const capitalize = cached((str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+})
+
+export function toRawType (value) {
+  return _toString.call(value).slice(8, -1)
 }
