@@ -39,3 +39,10 @@ export default class VNode {
     return this.componentInstance
   }
 }
+
+export function createEmptyVNode (text) {
+  const node = new VNode()
+  node.text = text
+  node.isComment = true
+  return node
+}
