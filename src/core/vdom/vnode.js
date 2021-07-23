@@ -46,3 +46,31 @@ export function createEmptyVNode (text) {
   node.isComment = true
   return node
 }
+
+
+export function createTextVNode (val) {
+  return new VNode(undefined, undefined, undefined, String(val))
+}
+
+export function cloneVNode (vnode) {
+  const cloned = new VNode(
+    vnode.tag,
+    vnode.data,
+    vnode.children && vnode.children.slice(),
+    vnode.text,
+    vnode.elm,
+    vnode.context,
+    vnode.componentOptions,
+    vnode.asyncFactory
+  )
+  cloned.ns = vnode.ns
+  cloned.isStatic = vnode.isStatic
+  cloned.key = vnode.key
+  cloned.isComment = vnode.isComment
+  cloned.fnContext = vnode.fnContext
+  cloned.fnOptions = vnode.fnOptions,
+  cloned.fnScopeId = vnode.fnScopeId
+  cloned.asyncMeta = vnode.asyncMeta
+  cloned.isCloned = vnode.isCloned
+  return cloned
+}

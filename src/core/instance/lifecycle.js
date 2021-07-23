@@ -127,6 +127,22 @@ export function activateChildComponent (vm, direct) {
   }
 }
 
+export function deactivateChildComponent (vm, direct) {
+  if (direct) {
+    vm._directInactive = true
+    if (isInInactiveTree(vm)) {
+      return
+    }
+  }
+  if (!vm._directInactive) {
+    vm._inactive = true
+    for (let i = 0; i < vm.$children.length; i++) {
+      deactivateChildComponent(vm.$children[i])
+    }
+    callHook(vm, 'deactivated')
+  }
+}
+
 
 function isInInactiveTree (vm) {
   while (vm && (vm = vm.$parent)) {
