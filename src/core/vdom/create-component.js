@@ -17,12 +17,12 @@ import {
   updateChildComponent,
   activateChildComponent,
   deactivateChildComponent,
-  extractPropsFromVNodeData
 } from '../instance/lifecycle'
 
 import {
   resolveAsyncComponent,
   createAsyncPlaceholder,
+  extractPropsFromVNodeData,
 } from './helpers/index'
 
 export function createComponent (

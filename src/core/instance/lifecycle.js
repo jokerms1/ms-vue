@@ -1,9 +1,12 @@
-import { invokeWithErrorHandling } from '../util/index'
+import { invokeWithErrorHandling, validateProp } from '../util/index'
 import {
   pushTarget,
   popTarget
 } from '../observer/dep'
-import { remove } from '../../shared/util'
+import { emptyObject, remove } from '../../shared/util'
+import { toggleObserving } from '../observer/index'
+import { updateComponentListeners } from './events'
+import { resolveSlots } from './render-helpers/resolve-slots'
 
 export let activeInstance = null
 export let isUpdatingChildComponent = false
@@ -107,6 +110,60 @@ export function initLifecycle (vm) {
   vm._isMounted = false
   vm._isDestroyed = false
   vm._isBeginDestroyed = false
+}
+
+export function updateChildComponent (
+  vm,
+  propsData,
+  listeners,
+  parentVnode,
+  renderChildren
+) {
+  if (process.env.NODE_ENV !== 'production') {
+    isUpdatingChildComponent = true
+  }
+  const hasChildren = !!(
+    renderChildren ||
+    vm.$options._renderChildren ||
+    parentVnode.data.scopedSlots ||
+    vm.$scopedSlots !== emptyObject
+  )
+
+  vm.$options._parentVnode = parentVnode
+  vm.$vnode = parentVnode
+
+  if (vm._vnode) {
+    vm._vnode.parent = parentVnode
+  }
+  vm.$options._renderChildren = renderChildren
+  vm.$attrs = parentVnode.data.attrs || emptyObject
+  vm.$listeners = listeners || emptyObject
+
+  if (propsData && vm.$options.props) {
+    toggleObserving(false)
+    const props = vm._props
+    const propKeys = vm.$options._propKeys || []
+    for (let i = 0; i < propKeys.length; i++) {
+      const key = propKeys[i]
+      const propOptions = vm.$options.props
+      props[key] = validateProp(key, propOptions, propsData, vm)
+    }
+    toggleObserving(true)
+    vm.$options.propsData = propsData
+  }
+
+  listeners = listeners || emptyObject
+  const oldListeners = vm.$options._parentListeners
+  vm.$options._parentListeners = listeners
+  updateComponentListeners(vm, listeners, oldListeners)
+  if (hasChildren) {
+    vm.$slots = resolveSlots(renderChildren, parentVnode.context)
+    vm.$forceUpdate()
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    isUpdatingChildComponent = false
+  }
 }
 
 export function activateChildComponent (vm, direct) {

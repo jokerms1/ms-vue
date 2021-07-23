@@ -141,3 +141,13 @@ export const capitalize = cached((str) => {
 export function toRawType (value) {
   return _toString.call(value).slice(8, -1)
 }
+
+export function once (fn) {
+  let called = false
+  return function () {
+    if (!called) {
+      fn.apply(this, arguments)
+      called = true
+    }
+  }
+}
