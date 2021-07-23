@@ -9,7 +9,7 @@ import {
 import { createElement } from '../vdom/create-element'
 import { installRenderHelpers } from './render-helpers/index'
 import { resolveSlots } from './render-helpers/resolve-slots.js'
-import { normalizeScopedSlots } from '../vdom/helper/normalize-scoped-slots'
+import { normalizeScopedSlots } from '../vdom/helpers/normalize-scoped-slots'
 
 import { isUpdatingChildComponent } from './lifecycle'
 import VNode, { createEmptyVNode } from '../vdom/vnode'

@@ -1,8 +1,13 @@
 import {
   extend,
+  hasOwn,
   camelize,
+  toRawType,
+  capitalize,
   isPlainObject
 } from 'shared/util'
+
+import { warn } from './debug'
 
 export function mergeOptions (parent, child, vm) {
   if (typeof child === 'function') {
@@ -14,7 +19,7 @@ export function mergeOptions (parent, child, vm) {
   normalizeDirective(child)
 }
 
-function normalizeProps (options) {
+function normalizeProps (options, vm) {
   const props = options.props
   if (!props) return
   const res = {}
@@ -38,6 +43,12 @@ function normalizeProps (options) {
         ? val
         : { type: val }
     }
+  } else if (process.env.NODE_ENV !== 'production') {
+    warn(
+      `Invalid value for option "props": expected an Array or an Object, ` +
+      `but got ${toRawType(props)}.`,
+      vm
+    )
   }
   options.props = res
 }
@@ -72,4 +83,29 @@ function normalizeDirective (options) {
       }
     }
   }
+}
+
+export function resolveAsset (
+  options,
+  type,
+  id,
+  warnMissing
+) {
+  if (typeof id !== 'string') {
+    return
+  }
+  const assets = options[type]
+  if (hasOwn(assets, id)) return assets[id]
+  const camelizeId = camelize(id)
+  if (hasOwn(assets, camelizeId)) return assets[camelizeId]
+  const PascalCaseId = capitalize(camelizeId)
+  if (hasOwn(assets, PascalCaseId)) return assets[PascalCaseId]
+  const res = assets[id] || assets[camelizeId] || assets[PascalCaseId]
+  if (process.env.NODE_ENV !== 'production' && warnMissing && !res) {
+    warn(
+      'Failed to resolve ' + type.slice(0, -1) + ': ' + id,
+      options
+    )
+  }
+  return res
 }
