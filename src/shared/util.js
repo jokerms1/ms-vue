@@ -38,6 +38,8 @@ function _toString(val) {
   return Array.prototype.toString(val)
 }
 
+
+
 const camlizeRE = /-(\w)/g
 export const camelize = cached((str) => {
   return str.replace(camlizeRE, (_, c) => c ? c.toUpperCase(): '')
@@ -65,6 +67,29 @@ export function extend (to, from) {
 const hasOwnProperty = Object.prototype.hasOwnProperty
 export function hasOwn (obj, key) {
   return hasOwnProperty.call(obj, key)
+}
+
+export function toString(val) {
+  return val == null
+    ? ''
+    : Array.isArray(val) || (isPlainObject(val) && val.toString === _toString)
+      ? JSON.stringify(val, null, 2)
+      : String(val)
+}
+
+export function toNumber (val) {
+  const n = parseFloat(val)
+  return isNaN(n) ? val : n
+}
+
+export function toObject (arr) {
+  const res = {}
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] ) {
+      extend(res, arr[i])
+    }
+  }
+  return res
 }
 
 export function noop () {}
@@ -140,6 +165,49 @@ export const capitalize = cached((str) => {
 
 export function toRawType (value) {
   return _toString.call(value).slice(8, -1)
+}
+
+export function looseEqual (a, b) {
+  if (a === b) return true
+  const isObjectA = isObject(a)
+  const isObjectB = isObject(b)
+  if (isObjectA && isObjectB) {
+    try {
+      const isArrayA = Array.isArray(a)
+      const isArrayB = Array.isArray(b)
+      if (isArrayA && isArrayB) {
+        return a.length === b.length && a.every((e, i) => {
+          return looseEqual(e, b[i])
+        })
+      } else if (a instanceof Date && b instanceof Date) {
+        return a.getTime() === b.getTime()
+      } else if (!isArrayA && !isArrayB) {
+        const keysA = Object.keys(a)
+        const keysB = Object.keys(b)
+        return keysA.length === keysB.length && keysA.every(key => {
+          return looseEqual(a[key], b[key])
+        })
+      } else {
+        /* istanbul ignore next */
+        return false
+      }
+    } catch (e) {
+      /* istanbul ignore next */
+      return false
+    }
+  } else if (!isObjectA && !isObjectB) {
+    return String(a) === String(b)
+  } else {
+    return false
+  }
+}
+
+
+export function looseIndexOf (arr, val) {
+  for (let i = 0; i < arr.length; i++) {
+    if (looseEqual(arr[i], val)) return i
+  }
+  return -1;
 }
 
 export function once (fn) {

@@ -37,3 +37,19 @@ export function resolveSlots (children, context) {
 function isWhitespace (node) {
   return (node.isComment && !node.asyncFactory) || node.text === ' '
 }
+
+export function resolveScopedSlots (
+  fns,
+  res
+) {
+  res = res || {}
+  for (let i = 0; i < fns.length; i++) {
+    const slot = fns[i]
+    if (Array.isArray(slot)) {
+      resolveScopedSlots(slot, res)
+    } else {
+      res[slot.key] = slot.fn
+    }
+  }
+  return res
+}
