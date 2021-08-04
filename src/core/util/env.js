@@ -5,6 +5,8 @@ export const hasProto = '__proto__' in {}
 
 export const UA = inBrowser && window.navigator.userAgent.toLowerCase()
 export const isIE = UA && /msie|trident/.test(UA)
+export const isIE9 = UA && UA.indexOf('msie 9.0') > 0
+export const isEdge = UA && UA.indexOf('edge/') > 0
 export const inWeek = typeof WXEnvironment !== 'undefined' && !!WXEnvironment.platform
 export const weexPlatform = inWeek && WXEnvironment.platform.toLowerCase()
 export const isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA) || (weexPlatform === 'ios'))
