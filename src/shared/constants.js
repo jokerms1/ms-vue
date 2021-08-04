@@ -1,4 +1,4 @@
-
+export const SSR_ATTR = 'data-server-rendered'
 
 export const ASSETSS_TYPES = [
   'component',

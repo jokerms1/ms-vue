@@ -111,7 +111,7 @@ const componentVNodeHooks = {
       vnode.data.keeyAlive
     ) {
       const mountedNode = vnode
-      componentVNodeHooks.propatch(mountedNode, mountedNode)
+      componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
