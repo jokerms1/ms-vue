@@ -1,6 +1,7 @@
 import { toNumber, toString, looseEqual, looseIndexOf} from 'shared/util'
 import { renderSlot } from './render-slot'
 import { renderList } from './render-list'
+import { checkKeyCodes } from './check-keycodes'
 import { bindObjectProps } from './bind-object-props'
 import { bindObjectListeners } from './bind-object-listeners' 
 import { resolveScopedSlots } from './resolve-slots'
@@ -11,6 +12,7 @@ export function installRenderHelpers (target) {
   target._t = renderSlot,
   target._q = looseEqual,
   target._i = looseIndexOf,
+  target._k = checkKeyCodes,
   target._b = bindObjectProps,
   target._u = resolveScopedSlots,
   target._g = bindObjectListeners
