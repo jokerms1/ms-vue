@@ -183,7 +183,7 @@ export function createComponentInstanceForVnode(
 
 function installComponentHooks (data) {
   const hooks = data.hook || (data.hook = {}) 
-  for (let i = 0; i< hooksToMerge.length; i++) {
+  for (let i = 0; i < hooksToMerge.length; i++) {
     const key = hooksToMerge[i]
     const existing = hooks[key]
     const toMerge = componentVNodeHooks[key]

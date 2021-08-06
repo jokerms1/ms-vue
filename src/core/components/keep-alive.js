@@ -44,7 +44,7 @@ export default {
   name: 'keep-alive',
   abstract: true,
 
-  props: ['include', 'exclue', 'max'],
+  props: ['include', 'exclude', 'max'],
 
   methods: {
     cacheVNode () {

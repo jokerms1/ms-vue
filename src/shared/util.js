@@ -167,6 +167,8 @@ export function toRawType (value) {
   return _toString.call(value).slice(8, -1)
 }
 
+export const isBuiltInTag = makeMap('slot,component', true)
+
 export function looseEqual (a, b) {
   if (a === b) return true
   const isObjectA = isObject(a)
