@@ -117,7 +117,7 @@ const componentVNodeHooks = {
         vnode,
         activeInstance
       )
-      child.$mount(hydrating ? vnode.elm: undefined, hydrating)
+      child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
 

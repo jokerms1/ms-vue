@@ -1,4 +1,4 @@
-export function genComponentMode (
+export function genComponentModel (
   el,
   value,
   modifiers
